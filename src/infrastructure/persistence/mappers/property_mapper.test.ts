@@ -1,69 +1,55 @@
+import { Property } from '../../../domain/entities/property';
+import { PropertyEntity } from '../entities/property_entity';
 import { PropertyMapper } from './property_mapper';
 
-class MockPropertyEntity {
-  id!: string;
-  name!: string;
-  description!: string;
-  maxGuests!: number;
-  basePricePerNight!: number;
-}
-
-class MockProperty {
-  constructor(
-    public id: string,
-    public name: string,
-    public description: string,
-    public maxGuests: number,
-    public basePricePerNight: number
-  ) {}
-
-  getId = () => this.id;
-  getName = () => this.name;
-  getDescription = () => this.description;
-  getMaxGuests = () => this.maxGuests;
-  getBasePricePerNight = () => this.basePricePerNight;
-}
-
 describe('PropertyMapper', () => {
-  const mockEntity = new MockPropertyEntity();
-  mockEntity.id = '1';
-  mockEntity.name = 'Test Property';
-  mockEntity.description = 'A test property description';
-  mockEntity.maxGuests = 4;
-  mockEntity.basePricePerNight = 100;
+  it('deve converter PropertyEntity em Property corretamente', () => {
+    const propertyEntity = new PropertyEntity();
+    propertyEntity.id = '123-abc';
+    propertyEntity.name = 'Casa na Praia';
+    propertyEntity.description = 'Casa com vista para o mar';
+    propertyEntity.maxGuests = 10;
+    propertyEntity.basePricePerNight = 500.5;
 
-  const mockDomain = new MockProperty(
-    '1',
-    'Test Property',
-    'A test property description',
-    4,
-    100
-  );
+    const property = PropertyMapper.toDomain(propertyEntity);
 
-  describe('toDomain', () => {
-    it('should map PropertyEntity to Property domain object', () => {
-      const result = PropertyMapper.toDomain(mockEntity as any);
-
-      expect(result).toBeInstanceOf(Object);
-      expect(result.getId()).toBe(mockEntity.id);
-      expect(result.getName()).toBe(mockEntity.name);
-      expect(result.getDescription()).toBe(mockEntity.description);
-      expect(result.getMaxGuests()).toBe(mockEntity.maxGuests);
-      expect(result.getBasePricePerNight()).toBe(mockEntity.basePricePerNight);
-      expect(typeof result.getBasePricePerNight()).toBe('number');
-    });
+    expect(property).toBeInstanceOf(Property);
+    expect(property.getId()).toBe(propertyEntity.id);
+    expect(property.getName()).toBe(propertyEntity.name);
+    expect(property.getDescription()).toBe(propertyEntity.description);
+    expect(property.getMaxGuests()).toBe(propertyEntity.maxGuests);
+    expect(property.getBasePricePerNight()).toBe(
+      propertyEntity.basePricePerNight
+    );
   });
 
-  describe('toPersistence', () => {
-    it('should map Property domain object to PropertyEntity', () => {
-      const result = PropertyMapper.toPersistence(mockDomain as any);
+  it('deve lançar erro de validação ao faltar campos obrigatórios no PropertyEntity', () => {
+    const invalidEntity = new PropertyEntity();
+    invalidEntity.id = '123'; // Faltando outros campos
 
-      expect(result).toBeInstanceOf(Object);
-      expect(result.id).toBe(mockDomain.getId());
-      expect(result.name).toBe(mockDomain.getName());
-      expect(result.description).toBe(mockDomain.getDescription());
-      expect(result.maxGuests).toBe(mockDomain.getMaxGuests());
-      expect(result.basePricePerNight).toBe(mockDomain.getBasePricePerNight());
-    });
+    expect(() => PropertyMapper.toDomain(invalidEntity)).toThrow(
+      'O nome é obrigatório'
+    );
+  });
+
+  it('deve converter Property para PropertyEntity corretamente', () => {
+    const property = new Property(
+      '123-abc',
+      'Casa na Praia',
+      'Casa com vista para o mar',
+      10,
+      500.5
+    );
+
+    const propertyEntity = PropertyMapper.toPersistence(property);
+
+    expect(propertyEntity).toBeInstanceOf(PropertyEntity);
+    expect(propertyEntity.id).toBe(property.getId());
+    expect(propertyEntity.name).toBe(property.getName());
+    expect(propertyEntity.description).toBe(property.getDescription());
+    expect(propertyEntity.maxGuests).toBe(property.getMaxGuests());
+    expect(propertyEntity.basePricePerNight).toBe(
+      property.getBasePricePerNight()
+    );
   });
 });
