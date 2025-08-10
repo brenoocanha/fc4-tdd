@@ -1,8 +1,8 @@
-import { User } from "../../domain/entities/user";
-import { UserEntity } from "../persistence/entities/user_entity";
-import { Repository } from "typeorm";
-import { UserRepository } from "../../domain/repositories/user_repository";
-import { UserMapper } from "../persistence/mappers/user_mapper";
+import { User } from '../../domain/entities/user';
+import { UserEntity } from '../persistence/entities/user_entity';
+import { Repository } from 'typeorm';
+import { UserRepository } from '../../domain/repositories/user_repository';
+import { UserMapper } from '../persistence/mappers/user_mapper';
 
 export class TypeORMUserRepository implements UserRepository {
   private readonly repository: Repository<UserEntity>;

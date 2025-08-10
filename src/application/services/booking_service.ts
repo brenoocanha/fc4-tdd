@@ -1,10 +1,10 @@
-import { Booking } from "../../domain/entities/booking";
-import { BookingRepository } from "../../domain/repositories/booking_repository";
-import { DateRange } from "../../domain/value_objects/date_range";
-import { CreateBookingDTO } from "../dtos/create_booking_dto";
-import { PropertyService } from "./property_service";
-import { UserService } from "./user_service";
-import { v4 as uuidv4 } from "uuid";
+import { Booking } from '../../domain/entities/booking';
+import { BookingRepository } from '../../domain/repositories/booking_repository';
+import { DateRange } from '../../domain/value_objects/date_range';
+import { CreateBookingDTO } from '../dtos/create_booking_dto';
+import { PropertyService } from './property_service';
+import { UserService } from './user_service';
+import { v4 as uuidv4 } from 'uuid';
 
 export class BookingService {
   constructor(
@@ -18,15 +18,15 @@ export class BookingService {
       dto.propertyId
     );
     if (!property) {
-      throw new Error("Propriedade não encontrada.");
+      throw new Error('Propriedade não encontrada.');
     }
 
     const guest = await this.userService.findUserById(dto.guestId);
     if (!guest) {
-      throw new Error("Usuário não encontrado.");
+      throw new Error('Usuário não encontrado.');
     }
 
-    const dateRange = new DateRange(dto.startDate, dto.endDate); // altamente acoplado precisa de mock
+    const dateRange = new DateRange(dto.startDate, dto.endDate);
 
     const booking = new Booking(
       uuidv4(),
@@ -44,7 +44,7 @@ export class BookingService {
     const booking = await this.bookingRepository.findById(bookingId);
 
     if (!booking) {
-      throw new Error("Reserva não encontrada.");
+      throw new Error('Reserva não encontrada.');
     }
 
     booking?.cancel(new Date());
