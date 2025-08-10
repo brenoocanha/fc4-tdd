@@ -25,7 +25,7 @@ describe('PropertyMapper', () => {
 
   it('deve lançar erro de validação ao faltar campos obrigatórios no PropertyEntity', () => {
     const invalidEntity = new PropertyEntity();
-    invalidEntity.id = '123'; // Faltando outros campos
+    invalidEntity.id = '123';
 
     expect(() => PropertyMapper.toDomain(invalidEntity)).toThrow(
       'O nome é obrigatório'
