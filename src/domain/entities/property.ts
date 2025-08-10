@@ -1,5 +1,5 @@
-import { DateRange } from "../value_objects/date_range";
-import { Booking } from "./booking";
+import { DateRange } from '../value_objects/date_range';
+import { Booking } from './booking';
 
 export class Property {
   private readonly bookings: Booking[] = [];
@@ -11,10 +11,13 @@ export class Property {
     private basePricePerNight: number
   ) {
     if (!name) {
-      throw new Error("O nome é obrigatório");
+      throw new Error('O nome é obrigatório');
     }
     if (maxGuests <= 0) {
-      throw new Error("O número máximo de hóspedes deve ser maior que zero");
+      throw new Error('O número máximo de hóspedes deve ser maior que zero');
+    }
+    if (!basePricePerNight || basePricePerNight <= 0) {
+      throw new Error('O preço base por noite é obrigatório.');
     }
     this.id = id;
     this.name = name;
@@ -65,7 +68,7 @@ export class Property {
   isAvailable(dateRange: DateRange): boolean {
     return !this.bookings.some(
       (booking) =>
-        booking.getStatus() === "CONFIRMED" &&
+        booking.getStatus() === 'CONFIRMED' &&
         booking.getDateRange().overlaps(dateRange)
     );
   }
